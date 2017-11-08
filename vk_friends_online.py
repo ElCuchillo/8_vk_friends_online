@@ -31,8 +31,8 @@ def get_online_friends(login, password):
 
         return friends_online
 
-    except:
-        return None
+    except vk.exceptions.VkAuthError:
+        return 'VkAuthError'
 
 
 def output_friends_to_console(friends_online):
@@ -40,12 +40,13 @@ def output_friends_to_console(friends_online):
         print('Nobody is online at the moment')
     else:
         print('Friends online: ')
-        for name in friends_online:
-            print('{} {}'.format(name[0], name[1]))
+        for friend_name in friends_online:
+            print('{} {}'.format(friend_name[0], friend_name[1]))
 
 
 if __name__ == '__main__':
     login = get_user_login()
     password = get_user_password()
     friends_online = get_online_friends(login, password)
-    output_friends_to_console(friends_online)
+    if not (friends_online == 'VkAuthError'):
+        output_friends_to_console(friends_online)
