@@ -16,19 +16,20 @@ def get_user_password():
 
 def get_online_friends(login, password):
     try:
-
         session = vk.AuthSession(
             app_id=APP_ID,
             user_login=login,
             user_password=password,
+            scope='friends'
         )
         api = vk.API(session)
+        online_id_list = api.friends.getOnline()
+        friends_online = dict.fromkeys(online_id_list)
 
-        friends_online = [[friends_data['first_name'],
-                           friends_data['last_name']]
-                          for friends_data in api.friends.get(fields='online')
-                          if friends_data['online']]
-
+        for friend_id in friends_online.keys():
+            friend_name = api.users.get(user_id=friend_id)[0]
+            friends_online[friend_id] = friend_name['first_name'] + ' ' +\
+                                        friend_name['last_name']
         return friends_online
 
     except vk.exceptions.VkAuthError:
@@ -40,8 +41,8 @@ def output_friends_to_console(friends_online):
         print('Nobody is online at the moment')
     else:
         print('Friends online: ')
-        for friend_name in friends_online:
-            print('{} {}'.format(friend_name[0], friend_name[1]))
+        for friend_name in friends_online.values():
+            print('{}'.format(friend_name))
 
 
 if __name__ == '__main__':
