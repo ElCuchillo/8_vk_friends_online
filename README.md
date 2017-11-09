@@ -17,8 +17,6 @@ Remember, it is recommended to use [virtualenv/venv](https://devman.org/encyclop
 Example of script launch on Linux, Python 3.5:
 
 ```bash
-
-source <path to virtual environment folder>/bin/activate
 python3 vk_friends_online
 ```
 
