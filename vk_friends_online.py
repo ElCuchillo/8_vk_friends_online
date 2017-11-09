@@ -1,3 +1,4 @@
+import sys
 import getpass
 import vk
 
@@ -24,12 +25,10 @@ def get_online_friends(login, password):
         )
         api = vk.API(session)
         online_id_list = api.friends.getOnline()
-        friends_online = dict.fromkeys(online_id_list)
-
-        for friend_id in friends_online.keys():
-            friend_name = api.users.get(user_id=friend_id)[0]
-            friends_online[friend_id] = friend_name['first_name'] + ' ' +\
-                                        friend_name['last_name']
+        if online_id_list:
+            friends_online = api.users.get(user_ids= online_id_list)
+        else:
+            friends_online = []
         return friends_online
 
     except vk.exceptions.VkAuthError:
@@ -41,8 +40,8 @@ def output_friends_to_console(friends_online):
         print('Nobody is online at the moment')
     else:
         print('Friends online: ')
-        for friend_name in friends_online.values():
-            print('{}'.format(friend_name))
+        for friend_name in friends_online:
+            print('{} {}'.format(friend_name['first_name'], friend_name['last_name']))
 
 
 if __name__ == '__main__':
