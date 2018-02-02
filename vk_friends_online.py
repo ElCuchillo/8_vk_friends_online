@@ -15,7 +15,6 @@ def get_user_password():
 
 
 def get_online_friends(login, password):
-    try:
         session = vk.AuthSession(
             app_id=APP_ID,
             user_login=login,
@@ -29,9 +28,6 @@ def get_online_friends(login, password):
         else:
             friends_online = []
         return friends_online
-
-    except vk.exceptions.VkAuthError as error_message:
-        raise Exception(error_message)
 
 
 def output_friends_to_console(friends_online):
@@ -51,6 +47,5 @@ if __name__ == '__main__':
     try:
         friends_online = get_online_friends(login, password)
         output_friends_to_console(friends_online)
-    except Exception as error:
+    except vk.exceptions.VkAuthError as error:
         print(error)
-        
