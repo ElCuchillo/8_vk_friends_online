@@ -25,13 +25,13 @@ def get_online_friends(login, password):
         api = vk.API(session)
         online_id_list = api.friends.getOnline()
         if online_id_list:
-            friends_online = api.users.get(user_ids= online_id_list)
+            friends_online = api.users.get(user_ids=online_id_list)
         else:
             friends_online = []
         return friends_online
 
-    except vk.exceptions.VkAuthError:
-        return 'VkAuthError'
+    except vk.exceptions.VkAuthError as error_message:
+        raise Exception(error_message)
 
 
 def output_friends_to_console(friends_online):
@@ -40,12 +40,17 @@ def output_friends_to_console(friends_online):
     else:
         print('Friends online: ')
         for friend_name in friends_online:
-            print('{} {}'.format(friend_name['first_name'], friend_name['last_name']))
+            print('{} {}'.format(friend_name['first_name'],
+                                 friend_name['last_name']))
 
 
 if __name__ == '__main__':
     login = get_user_login()
     password = get_user_password()
-    friends_online = get_online_friends(login, password)
-    if not (friends_online == 'VkAuthError'):
+
+    try:
+        friends_online = get_online_friends(login, password)
         output_friends_to_console(friends_online)
+    except Exception as error:
+        print(error)
+        
